@@ -3,14 +3,29 @@ body {
   height: 100%;
   margin: 0;
 }
+
 /*Задаём глобальные параметры*/
 body {
   background: black;
   display: flex;
+  flex-flow: column;
   align-items: center;
   justify-content: center;
 }
+
 /*Делаем границу вокруг игрового поля*/
 canvas {
   border: 1px solid white;
+}
+
+.score-block {
+  color: #fff;
+}
+
+.score-block h2,
+p {
+  display: inline-block;
+  margin-right: 1rem;
+  font-size: 30px;
+  font-weight: bold;
 }

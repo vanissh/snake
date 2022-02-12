@@ -1,9 +1,11 @@
 let canvas = document.getElementById('game'),
     context = canvas.getContext('2d'),
+    score = document.getElementById('score'),
     grid = 16, //cell size
     speed = 0,
     requestID,
-    stop = false
+    stop = false,
+    points = 0
 
 const snake = {
     x: 160,
@@ -19,6 +21,11 @@ const apple = {
     y: 320 //начальные координаты еды
 }
 
+setScore(points)
+
+function setScore(points){
+  score.innerHTML = points
+}
 function getAppleCoord(min, max){
     return Math.floor(Math.random() * (max - min)) + min; //координаты яблока на поле
 }
@@ -74,6 +81,9 @@ function game() {
     if (cell.x === apple.x && cell.y === apple.y) {
       // увеличиваем длину змейки
       snake.maxCells++;
+
+      points++;
+      setScore(points)
       // Рисуем новое яблочко
       // Помним, что размер холста у нас 400x400, при этом он разбит на ячейки — 25 в каждую сторону
       apple.x = getAppleCoord(0, 25) * grid;
@@ -84,6 +94,9 @@ function game() {
     for (var i = index + 1; i < snake.cells.length; i++) {
       // Если такие клетки есть — начинаем игру заново
       if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+
+        points = 0;
+        setScore(points)
         // Задаём стартовые параметры основным переменным
         snake.x = 160;
         snake.y = 160;
