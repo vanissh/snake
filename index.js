@@ -5,7 +5,8 @@ let canvas = document.getElementById('game'),
     speed = 0,
     requestID,
     stop = false,
-    points = 0
+    points = 0,
+    speedLimit = 4
 
 const snake = {
     x: 160,
@@ -35,14 +36,19 @@ function game() {
   
   requestID = requestAnimationFrame(game);
 
+  //увеличение скорости 
+  if(speedLimit > 2.5){
+    speedLimit = 4 - Math.floor(points/10) * 0.5
+  }
+  
   // Игровой код выполнится только один раз из четырёх
-  if (++speed < 4) {
+  if (++speed < speedLimit) {
     return;
   }
   // Обнуляем переменную скорости
   speed = 0;
   // Очищаем игровое поле
- context.clearRect(0, 0, canvas.width, canvas.height);
+  context.clearRect(0, 0, canvas.width, canvas.height);
 
   snake.x += snake.dx;
   snake.y += snake.dy;
