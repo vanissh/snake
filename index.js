@@ -1,6 +1,8 @@
 let canvas = document.getElementById('game'),
     context = canvas.getContext('2d'),
     score = document.getElementById('score'),
+    overlay = document.getElementById('game-over'),
+    btn = document.querySelector('.btn'),
     grid = 16, //cell size
     speed = 0,
     requestID,
@@ -28,7 +30,12 @@ function setScore(points){
   score.innerHTML = points
 }
 function getAppleCoord(min, max){
-    return Math.floor(Math.random() * (max - min)) + min; //координаты яблока на поле
+  return Math.floor(Math.random() * (max - min)) + min; //координаты яблока на поле
+}
+
+function stopGame(){
+  cancelAnimationFrame(requestID)
+  overlay.style.display = 'flex'
 }
 
 // Игровой цикл — основной процесс, внутри которого будет всё происходить
@@ -98,26 +105,38 @@ function game() {
     // Проверяем, не столкнулась ли змея сама с собой
     // Для этого перебираем весь массив и смотрим, есть ли у нас в массиве змейки две клетки с одинаковыми координатами 
     for (var i = index + 1; i < snake.cells.length; i++) {
+
       // Если такие клетки есть — начинаем игру заново
       if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-
-        points = 0;
-        setScore(points)
-        // Задаём стартовые параметры основным переменным
-        snake.x = 160;
-        snake.y = 160;
-        snake.cells = [];
-        snake.maxCells = 4;
-        snake.dx = grid;
-        snake.dy = 0;
-        // Ставим яблочко в случайное место
-        apple.x = getAppleCoord(0, 25) * grid;
-        apple.y = getAppleCoord(0, 25) * grid;
+        stopGame()
       }
     }
   });
 }
 
+
+btn.addEventListener('click', e => {
+
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  points = 0;
+  setScore(points)
+  // Задаём стартовые параметры основным переменным
+  snake.x = 160;
+  snake.y = 160;
+  snake.cells = [];
+  snake.maxCells = 4;
+  snake.dx = grid;
+  snake.dy = 0;
+  speedLimit = 4
+  // Ставим яблочко в случайное место
+  apple.x = getAppleCoord(0, 25) * grid;
+  apple.y = getAppleCoord(0, 25) * grid;
+
+  overlay.style.display = 'none'
+  requestID = requestAnimationFrame(game)
+
+})
 // Смотрим, какие нажимаются клавиши, и реагируем на них нужным образом
 document.addEventListener('keydown', function (e) {
   // Дополнительно проверяем такой момент: если змейка движется, например, влево, то ещё одно нажатие влево или вправо ничего не поменяет — змейка продолжит двигаться в ту же сторону, что и раньше. Это сделано для того, чтобы не разворачивать весь массив со змейкой на лету и не усложнять код игры.
